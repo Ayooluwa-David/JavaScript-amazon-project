@@ -1,3 +1,7 @@
+import {cart, addToCart} from './cart.js';
+import {products} from '../data/products.js'
+import { formatCurrency } from './utils/money.js';
+
 // const products = [
 //       {
 //         image: "images/products/athletic-cotton-socks-6-pairs.jpg",
@@ -69,7 +73,7 @@ products.forEach((product) => {
                 </div>
 
                 <div class="product-price">
-                    $${(product.priceCents/100).toFixed(2)}
+                    $${formatCurrency(product.priceCents)}
                 </div>
 
                 <div class="product-quantity-container">
@@ -103,30 +107,20 @@ products.forEach((product) => {
 })
 
 
-     console.log(productsHTML);
+    //  console.log(productsHTML);
      document.querySelector('.js-products-grid').innerHTML = productsHTML;
-
+function updateCartQuantity() {
+       let cartQuantity = 0;
+                cart.forEach((cartItem) => {
+                     cartQuantity += cartItem.quantity;
+                })
+                document.querySelector('.js-cart-quantity').innerHTML = cartQuantity; 
+}
 
      document.querySelectorAll('.js-add-to-cart').forEach((button) => {
-             button.addEventListener('click', ()=> {
+             button.addEventListener('click', () => {
                  const productId= button.dataset.productId;
-                 let matchingItem;
-                 cart.forEach((item) => {
-                     if(productId === item.productId) {
-                          matchingItem = item;
-                     }
-                 });
-
-                 if (matchingItem) {
-                       matchingItem.quantity  += 1;
-                 } 
-                 else {
-                    cart.push({
-                    productId,
-                    quantity: 1,
-                 });
-                 }
-                
-                 console.log(cart);
+                addToCart(productId);
+                updateCartQuantity();
              })
      })
